@@ -75,7 +75,7 @@ and uses the [grmtools](https://github.com/softdevteam/grmtools) library to gene
 
 # Features
 
-- Supports EEL2 preprocessor blocks (`<? ?>`)
+- Supports EEL2 preprocessor blocks (`<? ?>`, `_suppress`, etc.)
 - Parses meta information (sliders, options, etc.)
 - Provides various style and correctness [lints](#lints)
 - Reports syntax errors
