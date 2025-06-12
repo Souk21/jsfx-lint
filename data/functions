@@ -1,0 +1,146 @@
+abs(x)
+acos(x)
+asin(x)
+atan(x)
+atan2(x, y)
+ceil(x)
+cos(angle)
+exp(x)
+floor(x)
+invsqrt(x)
+log(x)
+log10(x)
+max(x, y)
+min(x, y)
+pow(x, y)
+rand([x])
+sign(x)
+sin(angle)
+sqr(x)
+sqrt(x)
+tan(angle)
+
+*time([v*])
+*time_precise([v*])
+
+*slider_next_chg(sliderindex,nextval)
+*slider(sliderindex)
+*spl(channelindex) "sample"
+
+*midirecv_buf(offset*, buf, maxlen) "block", "sample"
+*midirecv_str(offset*, #string*) "block", "sample"
+*midirecv(offset*, msg1*, msg2*, [msg3*]) "block", "sample"
+*midisend_buf(offset, buf, len) "block", "sample"
+*midisend_str(offset, #str) "block", "sample"
+*midisend(offset, msg1, msg2, [msg3]) "block", "sample"
+*midisyx(offset, msgptr, len) "block", "sample"
+
+*convolve_c(dest, src, size)
+*fft_ipermute(index, size)
+*fft_permute(index, size)
+*fft_real(start_index, size)
+*fft(start_index, size)
+*ifft_real(start_index, size)
+*ifft(start_index, size)
+*imdct(start_index, size)
+*mdct(start_index, size)
+
+__memtop()
+*freembuf(top)
+*memcpy(dest, source, length)
+*memset(dest, value, length)
+*mem_set_values(buf, ...)
+*mem_get_values(buf, ...*)
+*mem_multiply_sum(buf1, buf2, length)
+*mem_insert_shuffle(buf, len, value)
+
+*stack_exch(value)
+*stack_peek(index)
+*stack_pop(value)
+*stack_push(value)
+
+*slider_automate(mask_or_sliderX)
+*slider_show(mask_or_sliderX, [value])
+*sliderchange(mask_or_sliderX)
+
+*atomic_add(dest_val1, val2)
+*atomic_exch(val1, val2)
+*atomic_get(val)
+*atomic_set(dest_val1, val2)
+*atomic_setifequal(dest, value, newvalue)
+
+*export_buffer_to_project(buffer,length_samples,nch,srate,track_index,[flags,tempo,planar_pitch]) "gfx"
+
+get_host_numchan()
+get_pin_mapping(inout, pin, startchan, chanmask)
+get_pinmapper_flags()
+*set_host_numchan(numchan) "gfx"
+*set_pin_mapping(inout, pin, startchan, chanmask, mapping) "gfx"
+*set_pinmapper_flags(flags) "gfx"
+
+*match(#needle, #haystack, [...*])
+*matchi(#needle, #haystack, [...*])
+*sprintf(#str*, format, [...])
+*str_delsub(#str, pos, len)
+str_getchar(#str, offset, [type])
+*str_insert(#str, #srcstr, pos)
+*str_setchar(#str, offset, value, [type])
+*str_setlen(#str, len)
+*strcat(#str, #srcstr)
+strcmp(#str, #str2)
+*strcpy_from(#str, #srcstr, offset)
+*strcpy_fromslider(#str*, slider)
+*strcpy_substr(#str, #srcstr, offset, maxlen)
+*strcpy(#str, #srcstr)
+stricmp(#str, #str2)
+strlen(#str)
+*strncat(#str, #srcstr, maxlen)
+strncmp(#str, #str2, maxlen)
+*strncpy(#str, #srcstr, maxlen)
+strnicmp(#str, #str2, maxlen)
+
+*gfx_arc(x,y,r, ang1, ang2, [antialias]) "gfx"
+*gfx_blit(source, scale, rotation, [srcx, srcy, srcw, srch, destx, desty, destw, desth, rotxoffs, rotyoffs]) "gfx"
+*gfx_blitext(source, coordinatelist, rotation) "gfx"
+*gfx_blurto(x,y) "gfx"
+*gfx_circle(x,y,r,[fill,antialias]) "gfx"
+*gfx_deltablit(srcimg,srcx,srcy,srcw,srch, destx, desty, destw, desth, dsdx, dtdx, dsdy, dtdy, dsdxdy, dtdxdy, [usecliprect]) "gfx"
+*gfx_drawchar(c) "gfx"
+*gfx_drawnumber(n, ndigits) "gfx"
+*gfx_drawstr(#str,[flags, right, bottom]) "gfx"
+*gfx_getchar([char]) "gfx"
+*gfx_getdropfile(idx, [#str*])
+gfx_getfont() "gfx"
+*gfx_getimgdim(image, w*, h*) "gfx"
+*gfx_getpixel(r*, g*, b*) "gfx"
+gfx_getsyscol()
+*gfx_gradrect(x,y,w,h, r,g,b,a, [drdx, dgdx, dbdx, dadx, drdy, dgdy, dbdy, dady]) "gfx"
+*gfx_line(x, y, x2, y2, [aa]) "gfx"
+*gfx_lineto(x, y, [aa]) "gfx"
+*gfx_loadimg(image, #filename) "gfx"
+*gfx_measurestr(#str, w*, h*) "gfx"
+*gfx_muladdrect(x,y,w,h, mul_r, mul_g, mul_b, [mul_a, add_r, add_g, add_b, add_a]) "gfx"
+*gfx_printf(#str, [...]) "gfx"
+*gfx_rect(x, y, w, h, [filled]) "gfx"
+*gfx_rectto(x, y) "gfx"
+*gfx_roundrect(x,y,w,h,radius,[antialias]) "gfx"
+*gfx_set(r,[g,b,a,mode,dest]) "gfx"
+*gfx_setcursor(resource_id, [#custom_cursor_name]) "gfx"
+*gfx_setfont(idx, [fontface, sz, flags]) "gfx"
+*gfx_setimgdim(image, w, h) "gfx"
+*gfx_setpixel(r, g, b) "gfx"
+*gfx_showmenu(#str) "gfx"
+*gfx_transformblit(srcimg, destx, desty, destw, desth, div_w, div_h, table) "gfx"
+*gfx_triangle(x1,y1,x2,y2,x3,y3,[x4,y4,...]) "gfx"
+
+file_avail(handle)
+*file_close(handle) "init", "block", "sample", "gfx", "slider"
+*file_mem(handle, offset, length)
+*file_open(index_or_slider) "init", "block", "sample", "gfx", "slider"
+*file_rewind(handle)
+*file_riff(handle, nch, samplrate)
+*file_string(handle, #str*)
+*file_text(handle, istext)
+*file_var(handle, variable*)
+
+__dbg_getstackptr(arg)

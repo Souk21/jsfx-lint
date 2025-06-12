@@ -1,0 +1,49 @@
+! Line starting with '!' are comments and empty lines are skipped
+! [rw] is readable/writable
+! "sample" is a specific context (can be listed with "context1", "context2")
+! -"init" is all contexts except init (only implemented for @init)
+! name_of_variable [(r)ead (w)rite] "context1", "context2"
+! Note: splN, sliderN and regN variables are auto-generated in build.rs
+! Note: $e, $pi and $phi are parsed as Ast::Numbers() (see eel2.l)
+
+#dbg_desc [rw]
+beat_position [r] -"init"
+ext_gr_meter [rw] "init", "block"
+ext_midi_bus [rw] "init"
+ext_nodenorm [rw] "init"
+ext_noinit [rw] "init"
+ext_tail_size [rw] "init", "slider"
+gfx_a [rw]
+gfx_b [rw]
+gfx_clear [rw]
+gfx_dest [rw] "gfx"
+gfx_ext_flags [r] "gfx"
+gfx_ext_retina [rw] "gfx", "init"
+gfx_g [rw]
+gfx_h [r] -"init"
+gfx_mode [rw]
+gfx_r [rw]
+gfx_texth [r] -"init"
+gfx_w [r] -"init"
+gfx_x [rw]
+gfx_y [rw]
+gmem [rw]
+midi_bus [rw]
+mouse_cap [r] "gfx"
+mouse_hwheel [rw] -"init"
+mouse_wheel [rw] -"init"
+mouse_x [r] -"init"
+mouse_y [r] -"init"
+num_ch [r]
+pdc_bot_ch [rw] "block", "slider"
+pdc_delay [rw] "block", "slider"
+pdc_midi [rw] "block", "slider"
+pdc_top_ch [rw] "block", "slider"
+play_position [r] -"init"
+play_state [r] -"init"
+samplesblock [r]
+srate [r]
+tempo [r] -"init"
+trigger [rw] "sample", "block"
+ts_denom [r] -"init"
+ts_num [r] -"init"

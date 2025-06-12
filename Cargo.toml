@@ -1,0 +1,39 @@
+[package]
+name = "jsfx-lint"
+version = "0.1.0"
+edition = "2024"
+build = "src/build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+cfgrammar = "0.11"
+lrlex = "0.11"
+lrpar = "0.11"
+toml = "0.8.12"
+quote = "1.0.36"
+
+[dependencies]
+cfgrammar = "0.11"
+lrlex = "0.11"
+lrpar = "0.11"
+walkdir = "2"
+regex = "1.5"
+toml = "0.8.12"
+colored = "2.1.0"
+indoc = "2.0.5"
+
+[dependencies.uuid]
+version = "1.8.0"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
+[build-dependencies.uuid]
+version = "1.8.0"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
