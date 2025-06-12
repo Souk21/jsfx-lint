@@ -89,7 +89,7 @@ these errors, allowing you to spend less time scratching your head and more time
 jsfx-lint aspires to be a comprehensive linter for JSFX, addressing a wide range of issues from simple style problems to
 more complex and less obvious issues. The goal is to align closely with the official JSFX implementation.
 
-At the moment, jsfx-lint is a CLI tool. However, I plan to work on an LSP server for integration with text editors.
+At the moment, jsfx-lint is a CLI tool. However, work on an LSP server for integration with text editors is planned.
 
 # Installation
 
@@ -115,7 +115,7 @@ built [from the WDL/EEL2 repo](https://github.com/justinfrankel/WDL/blob/main/WD
 
 During the build process, the appropriate `eel_pp` binary from the `eel_pp/` directory is automatically copied to
 the `target/debug` or `target/release` directory. This ensures that the `eel_pp` binary is in the correct location
-for `jsfx-lint` to operate and for the GitHub Actions to package the binaries correctly.
+for `jsfx-lint` to operate and for GitHub Actions to package the binaries correctly.
 
 # Usage
 
@@ -141,11 +141,11 @@ echo "@init\na = 1;" | ./jsfx-lint -
 To customize the linter, add a `config.toml` file in the same directory as the `jsfx-lint` binary. This file lets you override the default severity for specific lints. For example:
 
 ```toml
-"arg_never_read" = "silent"
+arg_never_read = "silent"
 # ...
 ```
 
-Any lints not listed in the config file will use their default severity.
+Any lints not listed in the config file will use their default severity. Valid lint names can be found in the [Lints](#lints) section of this README.
 
 # Development
 
@@ -159,10 +159,10 @@ A file can import other files using the `import` directive. Quoting the JSFX doc
 > does
 > not implement those sections, the imported version of those sections will be used.
 
-One thing this doesn't mention is that not only the functions definitions in @init are imported, the code is also
+One thing this doesn't mention is that not only the function definitions in @init are imported, the code is also
 imported. It's as if the code of the imported section was pasted in the importing file, before its first @init section.
 
-If a file contains multiple @section of
+If a file contains multiple `@section` of
 the same type, they are merged into a single section, in order of their definition in the source file.
 
 In `jsfx-lint`, the `Program` struct is the main data structure representing a JSFX program. It contains the parsed AST,
@@ -197,8 +197,8 @@ The linter operates in three passes:
 ## Creating a lint
 
 The first step of creating a new lint is to add an entry to the `data/config.default.toml` file. The key should be the
-lint name (in snake_case) and the value should be the default severity of the lint. The severity can be one of the
-following: `error`, `warning`, `style`, `silent`.
+lint name (in snake_case), and the value should be the default severity of the lint. The severity can be one of the
+following: `error`, `warning`, `style`, or `silent`.
 
 ```toml
 # ...
@@ -207,14 +207,14 @@ following: `error`, `warning`, `style`, `silent`.
 ```
 
 > [!TIP]
-> - Use `error` only for lints that triggers an error with the official JSFX implementation.
+> - Use `error` only for lints that trigger an error with the official JSFX implementation.
 > - Use `warning` for lints that are likely to be mistakes or lead to confusing code.
-> - Use `style` for more opinionated lints.
+> - Use `style` for more opinionated or cosmetic lints.
 
-The lint will then be automatically added to the `IssueKind` enum as a PascalCase variant (e.g. `IssueKind::MyLint`).
-This process takes place in the `build.rs` file.
+The lint will then automatically be added to the `IssueKind` enum as a PascalCase variant (e.g. `IssueKind::MyLint`).
+This process takes place in the [`build.rs`](src/build.rs) file.
 
-A new module needs to be added to the `lints/` directory. Usually the module has the same name than the config entry. (e.g. `my_lint.rs` for the `my_lint` config entry).
+A new module needs to be added to the [`src/lints/`](src/lints) directory. Usually, the module has the same name as the config entry. (e.g. `my_lint.rs` for the `my_lint` config entry).
 
 The module should contain a public function of the type:
 
@@ -222,7 +222,7 @@ The module should contain a public function of the type:
 type Lint = fn(&Program, &mut Issues);
 ```
 
-This function role is to add the issues found in the program to `Issues`, using the `IssueKind` generated above.
+This function's role is to add the issues found in the program to `Issues`, using the `IssueKind` generated above.
 The `Program` struct contains the parsed AST and other information about the file.
 
 ```rust
@@ -232,8 +232,7 @@ pub fn lint(program: &Program, issues: &mut Issues) {
 }
 ```
 
-It's recommended to create tests for the lint. The tests should be in the same file as the lint, in
-a `mod tests`.
+It is recommended to create tests for each lint. The tests should be in the same file as the lint, inside a `mod tests` module.
 
 ```rust
 #[cfg(test)]
@@ -258,7 +257,7 @@ mod tests {
 }
 ```
 
-The module then needs to be added to the `lints/mod.rs` file as follows:
+The module then needs to be imported into [`lints/mod.rs`](src/lints/mod.rs) as follows:
 
 ```rust
 // ...
@@ -274,7 +273,7 @@ pub fn get() -> Vec<Lint> {
 }
 ```
 
-Lastly, you need to document the lint in the `README.md` file, in the [Lint](#lints) section.
+Lastly, you need to document the lint in the `README.md` file, in the [Lints](#lints) section.
 
 # Lints
 
@@ -303,7 +302,7 @@ function foo(bar) ( 0 );
 
 Default severity: `warning`
 
-Function with no argument can also be called with one argument, which end up being discarded.
+A function with no arguments can also be called with one argument, which ends up being discarded.
 
 ```
 function foo() (0);
@@ -328,7 +327,7 @@ function foo() local(bar) local(bar) (0);
 
 Default severity: `style`
 
-Modifier is defined multiple times.
+A modifier is defined multiple times.
 
 ```
 function foo() local(a) local(b) (0);
@@ -338,7 +337,7 @@ function foo() local(a) local(b) (0);
 
 Default severity: `silent`
 
-Empty modifier (other than `global`) in function definition.
+Empty modifier (other than `global`) in a function definition.
 
 ```
 function foo() local() (0);
@@ -348,7 +347,7 @@ function foo() local() (0);
 
 Default severity: `warning`
 
-Modifier argument is fully shadowed by function argument.
+Modifier argument is fully shadowed by a function argument.
 Note: Function arguments that are named `this` or that start with `this.` are not reachable as they are shadowed by the `this` keyword.
 
 ```
@@ -359,14 +358,14 @@ function foo(a) local(a) (0);
 
 Default severity: `warning`
 
-Variable is never read. Note that a variable defined as `_` will be ignored by this lint.
+A variable is never read. Note that a variable defined as `_` will be ignored by this lint.
 
 
 ## global_never_written
 
 Default severity: `warning`
 
-Variable is never written. Note that a variable defined as `_` will be ignored by this lint.
+A variable is never written. Note that a variable defined as `_` will be ignored by this lint.
 
 ## implicit_parens
 
@@ -423,7 +422,7 @@ function foo() global(a) (
 
 Default severity: `warning`
 
-Function use variables or call functions with incompatible contexts.
+Function uses variables or calls functions with incompatible contexts.
 
 ```
 function foo() (
@@ -436,7 +435,7 @@ function foo() (
 ## inconsistent_casing
 
 Default severity: `style`
-Variable or function called with different casing thorough the file.
+A variable or function called with different casing throughout the file.
 
 ```
 function foo() (0);
@@ -453,7 +452,7 @@ baz = BAR;
 
 Default severity: `warning`
 
-Left-hand side of assignment is not assignable.
+The left-hand side of the assignment is not assignable.
 
 ```
 (1 + 1) = 1;
@@ -464,7 +463,7 @@ floor(1) = 1;
 
 Default severity: `warning`
 
-`sliderN` variable with `N` greater than 256 or `N` equal to 0.
+A `sliderN` variable with `N` greater than 256 or `N` equal to 0.
 
 ```
 a = slider0;
@@ -475,7 +474,7 @@ a = slider257;
 
 Default severity: `warning`
 
-Loop used as the right-hand side of an assignment.
+A loop used as the right-hand side of an assignment.
 
 ```
 a = while(i < 10) (
@@ -489,7 +488,7 @@ a = while(i < 10) (
 
 Default severity: `warning`
 
-Value accessed on a `instance`/`this`/`ref` is not accessed anywhere else.
+A value accessed on a `instance`/`this`/`ref` is not accessed anywhere else.
 
 ```
 function foo() ( this.bar = 1; );
@@ -513,7 +512,7 @@ object.foo(); // Sets object.bar to 1
 
 Default severity: `warning`
 
-Argument is assigned before being read.
+An argument is assigned before being read.
 
 ```
 function foo(a) (
@@ -525,7 +524,7 @@ function foo(a) (
 
 Default severity: `error`
 
-Function is called with too many or too few parameters.
+A function is called with too many or too few parameters.
 
 ```
 foo = abs(1, 2);
@@ -536,7 +535,7 @@ gfx_rect(1);
 
 Default severity: `error`
 
-Parser encountered an error/unexpected token. Example:
+The parser encountered an error or unexpected token. Example:
 
 ```
 a (= 1;
@@ -546,7 +545,7 @@ a (= 1;
 
 Default severity: `warning`
 
-Argument present both in arg list and in modifier is partially shadowed.
+An argument present both in the arg list and in a modifier is partially shadowed.
 
 ```
 function foo(a) instance(a) (
@@ -564,7 +563,7 @@ Default severity: `warning`
 
 Default severity: `error`
 
-Ref args (`arg*`) are only allowed in `global` or `globals` modifier.
+Ref args (`arg*`) are only allowed in a `global` or `globals` modifier.
 
 ```
 function foo() local(bar*) (0);
@@ -574,7 +573,7 @@ function foo() local(bar*) (0);
 
 Default severity: `warning`
 
-@sample section without audio input/output. Code should be moved to @block section.
+A @sample section without audio input/output. The code should be moved to the @block section.
 
 ```
 @sample
@@ -585,7 +584,7 @@ gain = slider1;
 
 Default severity: `warning`
 
-Slider that are bound to a variable can't be accessed using sliderN variables.
+Sliders that are bound to a variable can't be accessed using sliderN variables.
 
 ```
 slider1:foo=0<0,1,1>Foo
@@ -597,7 +596,7 @@ slider1 = 2; // Will not set slider1 to 2
 
 Default severity: `warning`
 
-Slider identifier is not a valid EEL2 identifier. It must start with an alphanumerical character or '_' and can only contain letters, numbers, commas and underscores.
+Slider identifier is not a valid EEL2 identifier. It must start with an alphanumeric character or '_', and can only contain letters, numbers, commas and underscores.
 
 ```
 slider1:gain-db=0<0,1,1>Gain dB
@@ -607,7 +606,7 @@ slider1:gain-db=0<0,1,1>Gain dB
 
 Default severity: `warning`
 
-Sliders with labels should have their minimum equal to 0, their step equal to 1 and their maximum equal to the number of
+Sliders with labels should have their minimum equal to 0, their step equal to 1, and their maximum equal to the number of
 labels.
 
 ```
@@ -618,7 +617,7 @@ slider1:0<0,3,1{One,Two}>Foo // Maximum should be 2
 
 Default severity: `warning`
 
-Slider is set to a value above its maximum or below its minimum.
+A slider is set to a value above its maximum or below its minimum.
 
 ```
 slider1:0<0,1,1>Foo
@@ -631,7 +630,7 @@ slider1 = 2; // Above maximum
 
 Default severity: `error`
 
-Slider defined with an id greater than 256.
+A slider is defined with an id greater than 256.
 
 ```
 slider257:1<0,1,1>foo
@@ -641,7 +640,7 @@ slider257:1<0,1,1>foo
 
 Default severity: `warning`
 
-Slider parser encountered an error. This can happen if the slider definition is malformed.
+The slider parser encountered an error. This can happen if the slider definition is malformed.
 
 ```
 slider1:0<0,text,1>Foo
@@ -652,7 +651,7 @@ slider1:0<0,1,1{One,Two>Foo
 
 Default severity: `warning`
 
-Slider without a description. It will not be displayed in the default UI and will not be automatable.
+A slider without a description. It will not be displayed in the default UI and will not be automatable.
 
 ```
 slider1:0<0,1,1>
@@ -663,7 +662,7 @@ slider1:0<0,1,1>
 
 Default severity: `error`
 
-`sprintf` is called with an incorrect number of arguments.
+`sprintf` is called with the incorrect number of arguments.
 
 ```
 sprintf(#str, "%d %d", 1);
@@ -673,7 +672,7 @@ sprintf(#str, "%d %d", 1);
 
 Default severity: `error`
 
-`#strings` are not allowed in `local()` modifier.
+`#strings` are not allowed in the `local()` modifier.
 
 ```
 function foo() local(#str) (0);
@@ -683,7 +682,7 @@ function foo() local(#str) (0);
 
 Default severity: `error`
 
-Function is defined with too many parameters. Maximum is 40.
+A function is defined with too many parameters. The maximum is 40.
 
 ```
 function foo(p1, p2, ... p42, p43) (0);
@@ -693,13 +692,13 @@ function foo(p1, p2, ... p42, p43) (0);
 
 Default severity: `error`
 
-Function doesn't exist.
+The called function doesn't exist.
 
 ## unknown_section
 
 Default severity: `error`
 
-`@section` other than `@init`,  `@sample`, `@serialize`, `@block`, `@gfx` or `@slider`.
+`@section` other than `@init`,  `@sample`, `@serialize`, `@block`, `@gfx`, or `@slider`.
 
 ## unknown_slider
 
@@ -711,7 +710,7 @@ Accessing a slider that is not defined.
 
 Default severity: `style`
 
-Unnecessary comma in function/modifier argument list. Note: trailing commas are allowed.
+Unnecessary comma(s) in function/modifier argument list. Note: trailing commas are allowed.
 
 ```
 function foo(bar,, baz) (0);
@@ -721,7 +720,7 @@ function foo(bar,, baz) (0);
 
 Default severity: `style`
 
-Unnecessary semicolon(s) in function body.
+Unnecessary semicolon(s) in a function body.
 
 ```
 @init
@@ -733,7 +732,7 @@ b;
 
 Default severity: `error`
 
-Function is unreachable because it's shadowed by `loop` or `while` keywords.
+A function is unreachable because it is shadowed by the `loop` or `while` keywords.
 
 ```
 function loop(foo, bar) (0);
@@ -751,13 +750,13 @@ function while(foo) (0);
 
 Default severity: `warning`
 
-Function is never called.
+A function is never called.
 
 ## unused_modifier_arg
 
 Default severity: `warning`
 
-Modifier argument is never used.
+A modifier argument is never used.
 
 ```
 function foo() local(unused) ( 0 );
@@ -771,13 +770,13 @@ function foo() global(unused) ( 0 );
 
 Default severity: `warning`
 
-Slider is never read or written to.
+A slider is never read or written to.
 
 ## useless_expression
 
 Default severity: `warning`
 
-Expression doesn't have any side effects.
+An expression doesn't have any side effects.
 
 ```
 @init
@@ -791,7 +790,7 @@ function foo() (
 
 Default severity: `warning`
 
-Function does not need to be called on an object.
+A function does not need to be called on an pseudo-object.
 
 ```
 function foo() ( 0; );
@@ -802,7 +801,7 @@ bar.foo();
 
 Default severity: `warning`
 
-Argument does not need to be `ref`.
+An argument does not need to be `ref`.
 
 ```
 function foo(a*) ( b = a; );
@@ -822,7 +821,7 @@ beat_position = 10;
 
 Default severity: `warning`
 
-Variable/function used in the wrong context.
+A variable or function is used in the wrong context.
 
 ```
 @init
@@ -833,7 +832,7 @@ spl0 = 1; // spl0 can only be used in @block or @sample
 
 Default severity: `error`
 
-`@section` (except `@gfx`) with params.`@gfx` with more than 2 params (or only 1).`@gfx` with non-integer params.
+`@section` (except `@gfx`) with parameters. `@gfx` with more than 2 parameters (or only 1).`@gfx` with non-integer params.
 
 ```
 @gfx 10 20 30
@@ -865,12 +864,12 @@ Default severity: `error`
   @block
   b = 2;
   ```
-  This behavior of joining section text is not yet implemented in `jsfx-lint`,  which keeps multiple @section of the same type separate. Work is planned to address this in the future.
-- [JSFX looks in the `REAPER/Effects` directory when resolving imports.](https://askjf.com/index.php?q=7154s) Right now, `jsfx-lint` only knows about the default `Effects` path (`~/.config/REAPER/Effects` on Linux, `%APPDATA%\REAPER\Effects` on Windows, and `~/Library/Application Support/REAPER/Effects` on macOS). It's currently not possible to specify additional/alternative paths for imports. This is planned for a future release.
-- Right now `jsfx-lint` does not show style or warning lints that are located in the output of a preprocessor block (i.e. `<? ?>`). This is to avoid flooding the output with lints that are not relevant to the user. This should be a flag/config option in the future.
-- There are still a lot of simple optimizations that can be done to the linter.
-- Lints ideas:
-  - Warn about unknown `option`, or wrong params for `option`
+  This behavior of joining section text is not yet implemented in `jsfx-lint`,  which currently keeps multiple `@section` blocks of the same type separate. Work is planned to address this in the future.
+- [JSFX looks in the `REAPER/Effects` directory when resolving imports.](https://askjf.com/index.php?q=7154s) Right now, `jsfx-lint` only knows about the default `Effects` path (`~/.config/REAPER/Effects` on Linux, `%APPDATA%\REAPER\Effects` on Windows, and `~/Library/Application Support/REAPER/Effects` on macOS). It is currently not possible to specify additional or alternative paths for imports. This is planned for a future release.
+- Currently, `jsfx-lint` does not show style or warning lints that are located in the output of a preprocessor block (i.e. `<? ?>`). This is to avoid flooding the output with lints that are not relevant to the user. This should be a flag/config option in the future.
+- There are still many simple optimizations that can be done to the linter.
+- Lint ideas:
+  - Warn about unknown `option`, or incorrect parameters for `option`
   - Track shadowed state for functions to be able to report when a function is unused because it is shadowed
   - Warn when a variable does not need to be an `instance`, and could be a `local`
   - `slider()` function lints
