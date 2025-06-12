@@ -129,8 +129,10 @@ jsfx-lint [filepath | -]
 
 Example usage:
 ```sh
+# From file
 jsfx-lint path_to/effect.jsfx
 
+# From stdin
 echo "@init\na = 1;" | ./jsfx-lint -
 ```
 
