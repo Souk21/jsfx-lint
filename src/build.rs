@@ -78,6 +78,7 @@ fn generate_config() -> Result<(), Box<dyn std::error::Error>> {
     let mut string_to_severity = Vec::new();
     let mut config_lines = Vec::new();
     let mut string_to_issue_kind = Vec::new();
+    let mut issue_kind_to_string = Vec::new();
     let mut severities_enum = Vec::new();
 
     for severity in SEVERITIES {
@@ -99,6 +100,9 @@ fn generate_config() -> Result<(), Box<dyn std::error::Error>> {
         let issue_kind_ident = format_ident!("{}", snake_to_pascal_case(issue_kind));
         string_to_issue_kind.push(quote! {
             #issue_kind => Some(IssueKind::#issue_kind_ident)
+        });
+        issue_kind_to_string.push(quote! {
+            &IssueKind::#issue_kind_ident => #issue_kind
         });
         issue_kinds.push(issue_kind_ident.clone());
         config_lines.push(quote! {
@@ -131,6 +135,11 @@ fn generate_config() -> Result<(), Box<dyn std::error::Error>> {
             match s {
                 #(#string_to_issue_kind),*,
                 _ => None,
+            }
+        }
+        pub fn issue_kind_to_string(kind: &IssueKind) -> &'static str {
+            match kind {
+                #(#issue_kind_to_string),*,
             }
         }
     };

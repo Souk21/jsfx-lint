@@ -1,3 +1,4 @@
+use crate::issue_kind_to_string;
 use crate::{IssueKind, Severity, get_default_config, location::Location};
 use colored::Colorize;
 use std::io::Write;
@@ -71,7 +72,7 @@ impl IssueTracker {
             location,
             text,
             severity,
-            ..
+            kind,
         } in &self.issues
         {
             let color_fn = match severity {
@@ -110,7 +111,13 @@ impl IssueTracker {
             let pointer_end = line_col.end_column;
             let mut pointer_len = pointer_end.saturating_sub(point_at);
             let arrow = "-->".blue().bold();
-            writeln!(writer, "{arrow_padding}{arrow} {}", printable.location_text)?;
+            let kind_str = issue_kind_to_string(kind);
+            writeln!(
+                writer,
+                "{arrow_padding}{arrow} {} ({})",
+                printable.location_text,
+                kind_str.italic()
+            )?;
             let mut line = printable.line;
             let max_len = 120;
             if line.len() > max_len {
