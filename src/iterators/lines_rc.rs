@@ -1,7 +1,8 @@
 use crate::iterators::lines_range::LineRanges;
 use crate::rcsubstring::RcSubString;
 
-/// Iterator returning each line and the length of the line including the line ending
+/// Iterates over lines in a string, returning each line and its full length (including line endings).
+/// The line content excludes the line ending, but the length includes it.
 pub struct LinesRc<'a> {
     string: &'a RcSubString,
     it: LineRanges<'a>,

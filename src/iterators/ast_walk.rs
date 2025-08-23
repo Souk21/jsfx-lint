@@ -1,7 +1,7 @@
 use crate::iterators::ast_walk_signal::{AstWalkSignal, WalkSignal};
 use crate::located_ast::LocatedAst;
 
-/// Iterator that yields AST nodes in the order an interpreter would visit them
+/// An iterator that walks through AST nodes in the order they would be visited by an interpreter.
 /// Nodes are yielded as `&LocatedAst`
 pub struct AstWalk<'a> {
     it: AstWalkSignal<'a>,

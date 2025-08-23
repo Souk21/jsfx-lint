@@ -3,15 +3,15 @@ use uuid::Uuid;
 use crate::ast::Ast;
 use crate::located_ast::LocatedAst;
 
-/// Iterator that yields AST nodes in the order an interpreter would visit them
-/// Nodes are yielded as `SigAst`
+/// An iterator that walks through AST nodes in the order they would be visited by an interpreter.
+/// Each iteration yields a `WalkSignal` marking entry or exit from a node.
 pub struct AstWalkSignal<'a> {
     stack: Vec<WalkSignal<'a>>,
 }
 
-/// Enum that represents the two possible signals that can be sent by `AstWalkSignal`.
-/// `Enter` signals that the interpreter is about to visit the node.
-/// `Exit` signals that the interpreter is done with the node and is moving to the next one.
+/// Describes a traversal event for an AST node.
+/// `Enter` signals the beginning of a node visit.
+/// `Exit` signals the end of a node visit.
 pub enum WalkSignal<'a> {
     Exit(&'a LocatedAst),
     Enter(&'a LocatedAst),

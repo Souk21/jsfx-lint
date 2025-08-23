@@ -1,6 +1,6 @@
 use std::str::CharIndices;
 
-/// An iterator that yields dots indices in a string
+/// An iterator that returns the positions of '.' characters in a string
 pub struct Dots<'a> {
     char_indices: CharIndices<'a>,
 }

@@ -1,6 +1,7 @@
 use std::{ops::Range, str::CharIndices};
 
-/// Iterator returning each line (without line endings) and the length of the line (including the line ending)
+/// Iterates over lines in a string, returning each line and its full length (including line endings).
+/// The line content excludes the line ending, but the length includes it.
 pub struct LineRanges<'a> {
     string: &'a str,
     byte_pos: usize,
