@@ -170,47 +170,47 @@ fn warn_commas_mod_args(
     mod_kind: &ModifierKind,
     trailing_comma: &Option<(usize, Location)>,
 ) {
-    if let Some(leading_commas) = leading_commas {
-        if leading_commas.0 > 1 {
-            let location = &leading_commas.1;
-            let new_location = Location {
-                line_col: crate::location::LineCol {
-                    start_line: location.line_col.start_line,
-                    end_line: location.line_col.end_line,
-                    start_column: location.line_col.start_column + 1,
-                    end_column: location.line_col.end_column,
-                },
-                file: location.file.clone(),
-                section: location.section,
-            };
-            let s = if leading_commas.0 > 3 { "s" } else { "" };
-            issues.add(
-                IssueKind::UnnecessaryComma,
-                &new_location,
-                format!("Unnecessary comma{s} in {fn_name}() {mod_kind}() arg list"),
-            );
-        }
+    if let Some(leading_commas) = leading_commas
+        && leading_commas.0 > 1
+    {
+        let location = &leading_commas.1;
+        let new_location = Location {
+            line_col: crate::location::LineCol {
+                start_line: location.line_col.start_line,
+                end_line: location.line_col.end_line,
+                start_column: location.line_col.start_column + 1,
+                end_column: location.line_col.end_column,
+            },
+            file: location.file.clone(),
+            section: location.section,
+        };
+        let s = if leading_commas.0 > 3 { "s" } else { "" };
+        issues.add(
+            IssueKind::UnnecessaryComma,
+            &new_location,
+            format!("Unnecessary comma{s} in {fn_name}() {mod_kind}() arg list"),
+        );
     }
-    if let Some(trailing_comma) = trailing_comma {
-        if trailing_comma.0 > 1 {
-            let location = &trailing_comma.1;
-            let new_location = Location {
-                line_col: crate::location::LineCol {
-                    start_line: location.line_col.start_line,
-                    end_line: location.line_col.end_line,
-                    start_column: location.line_col.start_column + 1,
-                    end_column: location.line_col.end_column,
-                },
-                file: location.file.clone(),
-                section: location.section,
-            };
-            let s = if trailing_comma.0 > 3 { "s" } else { "" };
-            issues.add(
-                IssueKind::UnnecessaryComma,
-                &new_location,
-                format!("Unnecessary comma{s} at the end of {fn_name}() {mod_kind}() arg list"),
-            );
-        }
+    if let Some(trailing_comma) = trailing_comma
+        && trailing_comma.0 > 1
+    {
+        let location = &trailing_comma.1;
+        let new_location = Location {
+            line_col: crate::location::LineCol {
+                start_line: location.line_col.start_line,
+                end_line: location.line_col.end_line,
+                start_column: location.line_col.start_column + 1,
+                end_column: location.line_col.end_column,
+            },
+            file: location.file.clone(),
+            section: location.section,
+        };
+        let s = if trailing_comma.0 > 3 { "s" } else { "" };
+        issues.add(
+            IssueKind::UnnecessaryComma,
+            &new_location,
+            format!("Unnecessary comma{s} at the end of {fn_name}() {mod_kind}() arg list"),
+        );
     }
 }
 
@@ -220,47 +220,47 @@ fn warn_commas_in_arg(
     fn_name: &str,
     trailing_comma: &Option<(usize, Location)>,
 ) {
-    if let Some(leading_commas) = leading_commas {
-        if leading_commas.0 > 1 {
-            let location = &leading_commas.1;
-            let new_location = Location {
-                line_col: crate::location::LineCol {
-                    start_line: location.line_col.start_line,
-                    end_line: location.line_col.end_line,
-                    start_column: location.line_col.start_column + 1,
-                    end_column: location.line_col.end_column,
-                },
-                file: location.file.clone(),
-                section: location.section,
-            };
-            let s = if leading_commas.0 > 3 { "s" } else { "" };
-            issues.add(
-                IssueKind::UnnecessaryComma,
-                &new_location,
-                format!("Unnecessary comma{s} in {fn_name}() arg list"),
-            );
-        }
+    if let Some(leading_commas) = leading_commas
+        && leading_commas.0 > 1
+    {
+        let location = &leading_commas.1;
+        let new_location = Location {
+            line_col: crate::location::LineCol {
+                start_line: location.line_col.start_line,
+                end_line: location.line_col.end_line,
+                start_column: location.line_col.start_column + 1,
+                end_column: location.line_col.end_column,
+            },
+            file: location.file.clone(),
+            section: location.section,
+        };
+        let s = if leading_commas.0 > 3 { "s" } else { "" };
+        issues.add(
+            IssueKind::UnnecessaryComma,
+            &new_location,
+            format!("Unnecessary comma{s} in {fn_name}() arg list"),
+        );
     }
-    if let Some(trailing_comma) = trailing_comma {
-        if trailing_comma.0 > 1 {
-            let location = &trailing_comma.1;
-            let new_location = Location {
-                line_col: crate::location::LineCol {
-                    start_line: location.line_col.start_line,
-                    end_line: location.line_col.end_line,
-                    start_column: location.line_col.start_column + 1,
-                    end_column: location.line_col.end_column,
-                },
-                file: location.file.clone(),
-                section: location.section,
-            };
-            let s = if trailing_comma.0 > 3 { "s" } else { "" };
-            issues.add(
-                IssueKind::UnnecessaryComma,
-                &new_location,
-                format!("Unnecessary comma{s} at the end of {fn_name}() arg list"),
-            );
-        }
+    if let Some(trailing_comma) = trailing_comma
+        && trailing_comma.0 > 1
+    {
+        let location = &trailing_comma.1;
+        let new_location = Location {
+            line_col: crate::location::LineCol {
+                start_line: location.line_col.start_line,
+                end_line: location.line_col.end_line,
+                start_column: location.line_col.start_column + 1,
+                end_column: location.line_col.end_column,
+            },
+            file: location.file.clone(),
+            section: location.section,
+        };
+        let s = if trailing_comma.0 > 3 { "s" } else { "" };
+        issues.add(
+            IssueKind::UnnecessaryComma,
+            &new_location,
+            format!("Unnecessary comma{s} at the end of {fn_name}() arg list"),
+        );
     }
 }
 

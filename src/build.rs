@@ -417,14 +417,12 @@ pub fn copy_eel_pp_to_output() -> Result<(), Box<dyn Error>> {
     // If it is present, we know CompileKind::Target was used, otherwise CompileKind::Host was used.
     // Best effort since the existing tests aren't intended to be run in a real build this won't exist.
     // Unclear if that also means people in the wild are using the crate similarly, so avoiding any risk of break.
-    if let Ok(triple) = std::env::var("TARGET") {
-        if let Some(out_dir) = env::var_os("OUT_DIR") {
-            if let Some(out_dir) = out_dir.to_str() {
-                if out_dir.contains(&format!("target{}{}", std::path::MAIN_SEPARATOR, triple)) {
-                    out_path.push(triple);
-                }
-            }
-        }
+    if let Ok(triple) = std::env::var("TARGET")
+        && let Some(out_dir) = env::var_os("OUT_DIR")
+        && let Some(out_dir) = out_dir.to_str()
+        && out_dir.contains(&format!("target{}{}", std::path::MAIN_SEPARATOR, triple))
+    {
+        out_path.push(triple);
     }
     out_path.push(build_type);
     out_path.push(get_eel_pp_name());

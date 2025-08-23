@@ -144,27 +144,25 @@ fn warn_shadowed_global_args<'a, I>(
                 );
             }
         }
-        if !global_arg.is_ref {
-            if let Some(local_mods) = local_mod {
-                let found = local_mods
-                    .iter()
-                    .flat_map(|m| &m.args)
-                    .any(|a| a.name.to_lower() == global_arg.name.to_lower());
-                if found {
-                    let location = global_arg
-                        .location
-                        .as_ref()
-                        .expect("All non-builtin function's arg should have a location.");
-                    issues.add(
-                        IssueKind::FullyShadowedArgument,
-                        location,
-                        format!(
-                            "global arg `{}` is fully shadowed by local arg `{}`",
-                            global_arg.name, global_arg.name
-                        ),
-                    );
-                }
-            }
+        if !global_arg.is_ref
+            && let Some(local_mods) = local_mod
+            && local_mods
+                .iter()
+                .flat_map(|m| &m.args)
+                .any(|a| a.name.to_lower() == global_arg.name.to_lower())
+        {
+            let location = global_arg
+                .location
+                .as_ref()
+                .expect("All non-builtin function's arg should have a location.");
+            issues.add(
+                IssueKind::FullyShadowedArgument,
+                location,
+                format!(
+                    "global arg `{}` is fully shadowed by local arg `{}`",
+                    global_arg.name, global_arg.name
+                ),
+            );
         }
     }
 }

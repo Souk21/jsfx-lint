@@ -12,14 +12,14 @@ pub fn lint(program: &Program, issues: &mut IssueTracker) {
 }
 
 fn warn_duplicate_mod(fun_def: &Fun, kind: &ModifierKind, issues: &mut IssueTracker) {
-    if let Some(modifiers) = fun_def.modifiers.get(kind) {
-        if modifiers.len() > 1 {
-            issues.add(
-                IssueKind::DuplicateModifier,
-                &modifiers[1].location,
-                format!("Duplicate {}() modifier for {}()", kind, fun_def.name),
-            );
-        }
+    if let Some(modifiers) = fun_def.modifiers.get(kind)
+        && modifiers.len() > 1
+    {
+        issues.add(
+            IssueKind::DuplicateModifier,
+            &modifiers[1].location,
+            format!("Duplicate {}() modifier for {}()", kind, fun_def.name),
+        );
     }
 }
 

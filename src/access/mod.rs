@@ -1176,10 +1176,10 @@ fn get_accesses_from_assignment(
                 let value = get_assignment_value(operator, &lhs_value, &rhs_value);
 
                 // Read `lhs` if operator is not "="
-                if !matches!(operator, AssignmentOperator::Assign) {
-                    if let Some(read) = ret.to_read() {
-                        accesses.push(read);
-                    }
+                if !matches!(operator, AssignmentOperator::Assign)
+                    && let Some(read) = ret.to_read()
+                {
+                    accesses.push(read);
                 }
 
                 if let Some(write) = ret.to_write(value.clone()) {
@@ -1396,10 +1396,9 @@ fn get_value_from_previous_accesses(name: &RcSubString, accesses: &Vec<Undetermi
                 },
             ..
         } = access
+            && name.to_lower() == access_name.to_lower()
         {
-            if name.to_lower() == access_name.to_lower() {
-                last = if *potential { None } else { Some(value) }
-            }
+            last = if *potential { None } else { Some(value) }
         }
     }
     last.cloned().unwrap_or(Value::Unknown)

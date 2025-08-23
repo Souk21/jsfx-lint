@@ -100,11 +100,9 @@ fn warn_slider_not_accessed(program: &Program, issues: &mut IssueTracker) {
             let slider_with_id = format!("slider{id}");
             let slider_n_works = looks_like_slider_n_var(&program.metas, &slider_with_id);
             let slider_n_works = matches!(slider_n_works, MaybeSliderNVar::Some(_));
-            if slider_n_works {
-                if let Some(variable) = program.scope.variables.get(&slider_with_id) {
-                    is_read = variable.is_read();
-                    is_written = variable.is_written();
-                }
+            if slider_n_works && let Some(variable) = program.scope.variables.get(&slider_with_id) {
+                is_read = variable.is_read();
+                is_written = variable.is_written();
             }
 
             let mut slider_identifier_fmt = String::new();
