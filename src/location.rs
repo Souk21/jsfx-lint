@@ -122,7 +122,7 @@ impl Location {
         panic!("Didn't find the line in the processed source");
     }
 
-    pub fn to_printable(&self) -> Result<Printable, Box<dyn std::error::Error>> {
+    pub fn to_printable(&self) -> Result<Printable<'_>, Box<dyn std::error::Error>> {
         let range = self.to_processed_char_range();
         let start = Self::processed_char_idx_to_raw_char_idx(&self.file, range.start)?;
         let end = Self::processed_char_idx_to_raw_char_idx(&self.file, range.end)?;
