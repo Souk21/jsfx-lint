@@ -41,7 +41,7 @@ VALUE -> Result<LocatedAst, ParseError>:
     ;
 More_params -> Result<Vec<LocatedAst>, ParseError>:
 	expression { Ok(vec![$1?]) }
-	| More_params ',' expression {
+	| More_params "," expression {
         let mut more_params = $1?;
         more_params.push($3?);
         Ok(more_params)
@@ -75,8 +75,8 @@ string -> Result<LocatedAst, ParseError>:
 
 assignable_value -> Result<LocatedAst, ParseError>:
     id { $1 }
-    | '(' expression ')' { $2 }
-    | id '(' expression ')' '(' expression ')' {
+    | "(" expression ")" { $2 }
+    | id "(" expression ")" "(" expression ")" {
         if id_match(&$1, "while") {
             Ok(LocatedAst {
                 ast: Ast::While {
@@ -93,7 +93,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             Err(ParseError::ExpectedWhile($1?.location))
         }
     }
-    | id '(' ')' {
+    | id "(" ")" {
         if id_match(&$1, "while") {
             Ok(LocatedAst {
                 ast: Ast::While {
@@ -122,7 +122,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             });
         }
     }
-    | id '(' expression ')' {
+    | id "(" expression ")" {
         if id_match(&$1, "while") {
             Ok(LocatedAst {
                 ast: Ast::While {
@@ -151,7 +151,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             })
         }
     }
-    | id '(' expression ',' expression ')' {
+    | id "(" expression "," expression ")" {
         if id_match(&$1, "loop") {
             // Can be loop only if 2 params
             Ok(LocatedAst {
@@ -181,7 +181,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             });
         }
     }
-    | id '(' expression ',' expression ',' More_params ')'  {
+    | id "(" expression "," expression "," More_params ")"  {
         let mut more_params = $7?;
         more_params.insert(0, $5?);
         more_params.insert(0, $3?);
@@ -199,7 +199,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | rvalue '[' ']' {
+    | rvalue "[" "]" {
         let one = $1?;
         return Ok(LocatedAst {
             location: from_to(
@@ -213,7 +213,7 @@ assignable_value -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | rvalue '[' expression ']' {
+    | rvalue "[" expression "]" {
         let one = $1?;
         return Ok(LocatedAst {
             location: from_to(
@@ -240,7 +240,7 @@ rvalue -> Result<LocatedAst, ParseError>:
 
 assignment -> Result<LocatedAst, ParseError>:
     rvalue { $1 }
-    | assignable_value '=' if_else_expr {
+    | assignable_value "=" if_else_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -360,7 +360,7 @@ assignment -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | string_id '=' if_else_expr {
+    | string_id "=" if_else_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -388,7 +388,7 @@ assignment -> Result<LocatedAst, ParseError>:
 
 unary_expr -> Result<LocatedAst, ParseError>:
     assignment { $1 }
-	| '+' unary_expr {
+	| "+" unary_expr {
         let two = $2?;
         return Ok(LocatedAst {
             location: from_to(
@@ -402,7 +402,7 @@ unary_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-	| '-' unary_expr {
+	| "-" unary_expr {
         let two = $2?;
         return Ok(LocatedAst {
             location: from_to(
@@ -416,7 +416,7 @@ unary_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-	| '!' unary_expr {
+	| "!" unary_expr {
         let two = $2?;
         return Ok(LocatedAst {
             location: from_to(
@@ -434,7 +434,7 @@ unary_expr -> Result<LocatedAst, ParseError>:
 
 pow_expr -> Result<LocatedAst, ParseError>:
     unary_expr { $1 }
-    | pow_expr '^' unary_expr {
+    | pow_expr "^" unary_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -449,7 +449,7 @@ pow_expr -> Result<LocatedAst, ParseError>:
 
 mod_expr -> Result<LocatedAst, ParseError>:
     pow_expr { $1 }
-    | mod_expr '%' pow_expr {
+    | mod_expr "%" pow_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -489,7 +489,7 @@ mod_expr -> Result<LocatedAst, ParseError>:
 
 div_expr -> Result<LocatedAst, ParseError>:
 	mod_expr { $1 }
-	| div_expr '/' mod_expr {
+	| div_expr "/" mod_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -505,7 +505,7 @@ div_expr -> Result<LocatedAst, ParseError>:
 
 mul_expr -> Result<LocatedAst, ParseError>:
 	div_expr { $1 }
-	| mul_expr '*' div_expr {
+	| mul_expr "*" div_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -521,7 +521,7 @@ mul_expr -> Result<LocatedAst, ParseError>:
 
 sub_expr -> Result<LocatedAst, ParseError>:
 	mul_expr { $1 }
-	| sub_expr '-' mul_expr {
+	| sub_expr "-" mul_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -536,7 +536,7 @@ sub_expr -> Result<LocatedAst, ParseError>:
 
 add_expr -> Result<LocatedAst, ParseError>:
 	sub_expr { $1 }
-	| add_expr '+' sub_expr {
+	| add_expr "+" sub_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -551,7 +551,7 @@ add_expr -> Result<LocatedAst, ParseError>:
 
 andor_expr -> Result<LocatedAst, ParseError>:
 	add_expr { $1 }
-	| andor_expr '&' add_expr {
+	| andor_expr "&" add_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -563,7 +563,7 @@ andor_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-	| andor_expr '|' add_expr {
+	| andor_expr "|" add_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -575,7 +575,7 @@ andor_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-	| andor_expr '~' add_expr {
+	| andor_expr "~" add_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -591,7 +591,7 @@ andor_expr -> Result<LocatedAst, ParseError>:
 
 cmp_expr -> Result<LocatedAst, ParseError>:
     andor_expr { $1 }
-    | cmp_expr '<' andor_expr {
+    | cmp_expr "<" andor_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -603,7 +603,7 @@ cmp_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | cmp_expr '>' andor_expr {
+    | cmp_expr ">" andor_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
@@ -719,7 +719,7 @@ logical_and_or_expr -> Result<LocatedAst, ParseError>:
 
 if_else_expr -> Result<LocatedAst, ParseError>:
     logical_and_or_expr { $1 }
-    | logical_and_or_expr '?' if_else_expr ':' if_else_expr {
+    | logical_and_or_expr "?" if_else_expr ":" if_else_expr {
         let condition = $1?;
         let no = $5?;
         return Ok(LocatedAst {
@@ -731,7 +731,7 @@ if_else_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | logical_and_or_expr '?' ':' if_else_expr {
+    | logical_and_or_expr "?" ":" if_else_expr {
         let one = $1?;
         let four = $4?;
         return Ok(LocatedAst {
@@ -743,7 +743,7 @@ if_else_expr -> Result<LocatedAst, ParseError>:
             },
         });
     }
-    | logical_and_or_expr '?' if_else_expr {
+    | logical_and_or_expr "?" if_else_expr {
         let one = $1?;
         let three = $3?;
         return Ok(LocatedAst {
